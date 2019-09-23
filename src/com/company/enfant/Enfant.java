@@ -1,5 +1,7 @@
 package com.company.enfant;
 
+import java.text.SimpleDateFormat;
+
 public class Enfant {
     protected String _nom;
     protected String _prenom;
@@ -43,5 +45,12 @@ public class Enfant {
 
     public void set_prenom(String _prenom) {
         this._prenom = _prenom;
+    }
+
+    public int get_age(){
+        java.util.Date J = new java.util.Date();
+        SimpleDateFormat ft = new SimpleDateFormat("YYYY");
+        String annee = ft.format(J);
+        return Integer.parseInt(annee) - _annee_naissance;
     }
 }

@@ -2,18 +2,20 @@ package com.company.magasin;
 
 import com.company.magasin.magasin_exceptions.PasEntre0et100Exception;
 
-public class Electromenager extends Article {
+public class Alcool extends Article {
     private static double _tx_remise = 10;
-    public Electromenager (String intitule, double prix_achat, double prix){
-        super(intitule, prix_achat, prix, false, true);
+
+    public Alcool (String intitule, double prix_achat_unit, double prix_unit){
+        super(intitule, prix_achat_unit, prix_unit, false, false);
     }
 
     //pour la pub
     public String message_pub() {
-        return "Envie d'une belle maison ? N'essayer plus, vivez dans la rue.";
+        return "Et c'est parti pour le show !";
     }
 
     //pour les soldes
+
     public void active_solde(boolean oui) throws PasEntre0et100Exception {
         if(oui)
             try{

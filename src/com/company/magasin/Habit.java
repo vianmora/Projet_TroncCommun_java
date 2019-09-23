@@ -1,12 +1,12 @@
 package com.company.magasin;
 
-import com.company.personne.CompteBanque;
+import com.company.magasin.magasin_exceptions.PasEntre0et100Exception;
 
-public class Habit extends Article{
+public class Habit extends Article {
     private static double _tx_remise = 10;
 
     public Habit (String intitule, double prix_achat_unit, double prix_unit){
-        super(intitule, prix_achat_unit, prix_unit);
+        super(intitule, prix_achat_unit, prix_unit, false, true);
     }
 
     //pour la pub
@@ -16,7 +16,7 @@ public class Habit extends Article{
 
     //pour les soldes
 
-    public void active_solde(boolean oui) throws PasEntre0et100Exception{
+    public void active_solde(boolean oui) throws PasEntre0et100Exception {
         if(oui)
             try{
                 set_taux_remise(_tx_remise);

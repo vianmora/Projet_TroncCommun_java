@@ -3,7 +3,7 @@ package com.company.personne;
 public class RetraitCBException extends CBException {
 
     public String getMessage() {
-        return "désolé, vous avez atteind le découvert authorisé";
+        return "désolé, vous avez atteind le découvert autorisé";
     }
 
     public String getMessage(CompteBanque CB) {

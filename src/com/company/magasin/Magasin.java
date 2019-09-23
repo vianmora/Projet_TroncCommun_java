@@ -1,5 +1,7 @@
 package com.company.magasin;
 
+import com.company.magasin.magasin_exceptions.MagasinException;
+import com.company.magasin.magasin_exceptions.PasAssezStockException;
 import com.company.personne.CBException;
 import com.company.personne.CompteBanque;
 
@@ -8,25 +10,16 @@ import java.util.ArrayList;
 public class Magasin {
     private String _nom;
     private ArrayList<Article> _catalogue;
+    private int _nb_vendeur;
     private CompteBanque _CB;
     private String _codeCB;
 
-    public Magasin (String nom, String code){
+    public Magasin (String nom, String code, int nb_vendeur){
         _nom = nom;
         _CB = new CompteBanque(nom, code, "1234");
         _codeCB = code;
         _catalogue = new ArrayList<>();
-    }
-
-    public void set_CB(CompteBanque CB, String code) throws CBException{
-        try{
-            CB.test_code(code);
-            _CB = null;
-            _codeCB = code;
-        }
-        catch (Exception e){
-            throw e;
-        }
+        _nb_vendeur = nb_vendeur;
     }
 
     public String get_nom() {
@@ -63,20 +56,27 @@ public class Magasin {
         }
     }
 
-    public void achat (Article art, int quantite, CompteBanque CB_client, String code_client) throws Exception{
+    public void achat (Article art, double quantite, CompteBanque CB_client, String code_client, int age_client) throws CBException, MagasinException{
         if (_catalogue.contains(art)){
             Article article = _catalogue.get(_catalogue.indexOf(art));
             double prix = art.get_prix()*quantite;
+
             try {
+                art.retire_quantite(quantite, age_client);
                 CB_client.retrait(prix, code_client);
                 _CB.versement(prix, _codeCB);
-                art.retire_quantite(quantite);
                 System.out.println("Achat effectué");
             }
-            catch (Exception e){
+            catch (CBException e){
+                art.ajout_quantite(quantite);
                 throw e;
             }
+            catch (MagasinException ex){
+                throw ex;
+            }
         }
+        else
+            throw new PasAssezStockException();
     }
 
     public double get_valeur_stock(){

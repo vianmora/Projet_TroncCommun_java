@@ -132,7 +132,7 @@ public class Personne {
 
     // methodes
 
-    public int CalculAge(){
+    private int CalculAge(){
         java.util.Date J = new java.util.Date();
         SimpleDateFormat ft = new SimpleDateFormat("YYYY");
         String annee = ft.format(J);

@@ -1,11 +1,13 @@
 package com.company.magasin;
 
-public class Primeur extends Article{
+import com.company.magasin.magasin_exceptions.PasEntre0et100Exception;
+
+public class Primeur extends Article {
 
     private static double _tx_remise = 30;
 
     public Primeur (String intitule, double prix_achat_au_kilo, double prix_au_kilo){
-        super(intitule, prix_achat_au_kilo, prix_au_kilo);
+        super(intitule, prix_achat_au_kilo, prix_au_kilo, true, true);
     }
 
     //pour la pub
@@ -14,7 +16,7 @@ public class Primeur extends Article{
     }
 
     //pour les soldes
-    public void active_solde(boolean oui) throws PasEntre0et100Exception{
+    public void active_solde(boolean oui) throws PasEntre0et100Exception {
         if(oui)
             try{
                 set_taux_remise(_tx_remise);

@@ -1,5 +1,7 @@
 package com.company.magasin;
 
+import com.company.magasin.magasin_exceptions.PasEntre0et100Exception;
+
 public interface ISolde {
 
     void active_solde(boolean oui) throws PasEntre0et100Exception;
