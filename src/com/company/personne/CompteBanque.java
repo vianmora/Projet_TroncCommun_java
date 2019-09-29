@@ -1,10 +1,9 @@
 package com.company.personne;
 
-import com.company.personne.Personne;
-import com.sun.org.apache.bcel.internal.classfile.Code;
-import jdk.internal.dynalink.beans.StaticClass;
+import java.io.*;
 
-public class CompteBanque {
+
+public class CompteBanque implements Serializable{
     private int _numero;
     private String _ordre_payment;
     private double _solde;

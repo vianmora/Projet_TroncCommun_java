@@ -9,61 +9,73 @@ import com.company.magasin.Primeur;
 import com.company.personne.*;
 import com.company.personne.personnel.Enseignant;
 import com.company.personne.etudiant.EtudiantDigital;
+import java.io.*;
 
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args){
-	    // gérer les personnes & les comptes bancaires
+    public static void main(String[] args) {
+        // gérer les personnes & les comptes bancaires
+
+        ObjectInputStream ois = null;
+        ObjectOutputStream oos = null;
 
         /* créer une nouvelle personne : Vianney MORAIN*/
-        Personne moi = new Personne("MORAIN","Vianney");
-        System.out.println("Bonjour "+moi.get_prenom()+" "+moi.get_nom());
+        Personne moi = new Personne("MORAIN", "Vianney");
+        System.out.println("Bonjour " + moi.get_prenom() + " " + moi.get_nom());
 
         /* lui ajouter un numéro de sécurité social*/
         try {
             moi.set_numSecu("1960275112006");
-        }
-        catch (NumSecuException e){
+        } catch (NumSecuException e) {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("le numero de securité social ajouté est le :  "+moi.get_num_secu());
+        System.out.println("le numero de securité social ajouté est le :  " + moi.get_num_secu());
 
-        /* lui affecter un compte bancaire */
+        /* lui affecter un compte bancaire et l'enregistrer*/
         CompteBanque CB_moi = new CompteBanque(moi.get_nom(), "hellojesuisuncode", "hellomoiaussi");
 
-        System.out.println("vous avez le compte bancaire numero :  "+CB_moi.get_numero());
+        try {
+            oos = new ObjectOutputStream(
+                    new BufferedOutputStream(
+                            new FileOutputStream(
+                                    new File("fichier_bancaire.txt"))));
+            oos.writeObject(CB_moi);
+            oos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("vous avez le compte bancaire numero :  " + CB_moi.get_numero());
 
         /*mettre de l'argent (au black) sur son compte*/
-        System.out.println("solde : " + CB_moi.get_solde()+"€");
+        System.out.println("solde : " + CB_moi.get_solde() + "€");
         System.out.println("que voulez vous faire ? \n1 : retirer de l'argent\n2 : verser de l'argent");
 
         Scanner sc = new Scanner(System.in);
         String reponse = sc.nextLine();
 
-        if (reponse.equals("1")){
+        if (reponse.equals("1")) {
             System.out.println("Combien ? : ");
             String reponsecombien = sc.nextLine();
             float montant = Integer.valueOf(reponsecombien).floatValue();
-            try{
+            try {
                 CB_moi.retrait(montant, "hellojesuisuncode");
+            } catch (CBException e) {
             }
-            catch (CBException e){}
-            System.out.println("votre solde est désormais de "+CB_moi.get_solde()+"€");
-        }
-        else if (reponse.equals("2")){
+            System.out.println("votre solde est désormais de " + CB_moi.get_solde() + "€");
+        } else if (reponse.equals("2")) {
             System.out.println("Combien ? : ");
             String reponsecombien = sc.nextLine();
             float montant = Integer.valueOf(reponsecombien).floatValue();
-            try{
+            try {
                 CB_moi.versement(montant, "hellojesuisuncode");
+            } catch (CBException e) {
             }
-            catch (CBException e){}
-            System.out.println("votre solde est désormais de "+CB_moi.get_solde()+"€");
-        }
-        else{
+            System.out.println("votre solde est désormais de " + CB_moi.get_solde() + "€");
+        } else {
             System.out.println("désolé je n'ai pas compris... tant pis pour vous");
         }
 
@@ -76,13 +88,12 @@ public class Main {
         /* ajouter une note */
         Note N1 = new Note("maths", 13);
         ED1.ajout_note(N1);
-        System.out.println("La note de "+N1.get_note()+" en "+N1.get_matiere()+" a été ajouté au bulletin de " + ED1.get_prenom());
+        System.out.println("La note de " + N1.get_note() + " en " + N1.get_matiere() + " a été ajouté au bulletin de " + ED1.get_prenom());
 
-        if (ED1.valide("maths")){
-            System.out.println("Bonjour "+ED1.get_prenom()+" vous validez en maths, félicitation !");
-        }
-        else{
-            System.out.println("Bonjour "+ED1.get_prenom()+" désolé vous ne validez pas en maths...");
+        if (ED1.valide("maths")) {
+            System.out.println("Bonjour " + ED1.get_prenom() + " vous validez en maths, félicitation !");
+        } else {
+            System.out.println("Bonjour " + ED1.get_prenom() + " désolé vous ne validez pas en maths...");
         }
 
 
@@ -96,7 +107,7 @@ public class Main {
         Enseignant.set_prime(150);
         E.set_heure_travail(112);
 
-        System.out.println("\nBonjour "+E.get_nom()+" votre salaire du mois est de "+E.calculSalaire()+" €");
+        System.out.println("\nBonjour " + E.get_nom() + " votre salaire du mois est de " + E.calculSalaire() + " €");
 
         // systeme scolaire
 
@@ -104,9 +115,8 @@ public class Main {
         Enfant petit_jean = new Enfant("Dupont", "jean", 'M', 2004, 2, 75);
         try {
             Lyceen Ecolier1 = new Lyceen(petit_jean, "1ere");
-            System.out.println(Ecolier1.get_prenom() + " est en "+Ecolier1.get_niveau());
-        }
-        catch (NiveauException e){
+            System.out.println(Ecolier1.get_prenom() + " est en " + Ecolier1.get_niveau());
+        } catch (NiveauException e) {
             System.out.println(e.getMessage());
         }
 
@@ -119,8 +129,8 @@ public class Main {
         String code1 = "code1";
         Magasin ma_boutique = new Magasin("Chez moi", code1, 2);
 
-        try{
-           // ajout du capital
+        try {
+            // ajout du capital
 
             ma_boutique.add_capital(15000);
 
@@ -132,7 +142,7 @@ public class Main {
             ma_boutique.addArticle(vodka, 20);
 
             // personne moi achète un tee-shirt
-            System.out.println(tee_shirt.get_intitule()+" coute "+tee_shirt.get_prix()+"€");
+            System.out.println(tee_shirt.get_intitule() + " coute " + tee_shirt.get_prix() + "€");
             ma_boutique.achat(tee_shirt, 1, CB_moi, "hellojesuisuncode", moi.get_age());
 
             // activer les soldes
@@ -140,26 +150,24 @@ public class Main {
             System.out.println("solde activées");
 
             //moi veut réacheter un tee-shirt
-            System.out.println(tee_shirt.get_intitule()+" coute "+tee_shirt.get_prix()+"€");
+            System.out.println(tee_shirt.get_intitule() + " coute " + tee_shirt.get_prix() + "€");
             ma_boutique.achat(tee_shirt, 1, CB_moi, "hellojesuisuncode", moi.get_age());
 
             //combien ai-je dans ma trésorerie ?
-            System.out.println("la tresorerie du magasin vaut "+ma_boutique.get_tresorerie()+"€");
+            System.out.println("la tresorerie du magasin vaut " + ma_boutique.get_tresorerie() + "€");
 
             //quelle est la valeur de mon stock ?
-            System.out.println("le stock du magasin vaut "+ma_boutique.get_valeur_stock()+"€");
+            System.out.println("le stock du magasin vaut " + ma_boutique.get_valeur_stock() + "€");
 
             //petit_jean veut acheter une pomme avec ma carte bancaire
-            System.out.println(pomme.get_intitule()+" coute "+tee_shirt.get_prix()+"€");
+            System.out.println(pomme.get_intitule() + " coute " + tee_shirt.get_prix() + "€");
             ma_boutique.achat(pomme, 10.5, CB_moi, "hellojesuisuncode", petit_jean.get_age());
 
             //et une vodka ?
-            System.out.println(vodka.get_intitule()+" coute "+tee_shirt.get_prix()+"€");
+            System.out.println(vodka.get_intitule() + " coute " + tee_shirt.get_prix() + "€");
             ma_boutique.achat(vodka, 10.5, CB_moi, "hellojesuisuncode", petit_jean.get_age());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
